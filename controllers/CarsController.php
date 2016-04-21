@@ -31,8 +31,8 @@ class CarsController extends Controller
             return $this->response->setStatusCode(400,"No data sent");
         }
 
-        $car = Cars::factory($data->reg_no,$data->colour,$data->year);
-        if (!is_null($data->model)) {
+        $car = Cars::factory($data->reg_no,isset($data->colour) ? $data->colour : null,isset($data->year) ? $data->year : null);
+        if (isset($data->model) && !is_null($data->model)) {
             $car->setModel($data->model);
         }
 
@@ -59,15 +59,19 @@ class CarsController extends Controller
             return $this->response->setStatusCode(400,"No data sent");
         }
 
-        $car = Car::fetchFirst($id);
+        $car = Cars::findFirst($id);
         if ($car === false) {
             return $this->response->setStatusCode(404,"Not Found");
         }
 
         $car->reg_no = $data->reg_no;
-        $car->colour = $data->colour;
-        $car->year = $data->year;
-        if (!is_null($data->model)) {
+        if (isset($data->colour) && (!is_null($data->colour) || (is_null($data->colour) && !is_null($car->colour)))) {
+            $car->colour = $data->colour;
+        }
+        if (isset($data->year) && (!is_null($data->year) || (is_null($data->year) && !is_null($car->year)))) {
+            $car->year = $data->year;
+        }
+        if (isset($data->model) && !is_null($data->model)) {
             $car->setModel($data->model);
         }
 

@@ -1,8 +1,13 @@
 <?php
 use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\Validator\Uniqueness;
 use Phalcon\Di;
 
 class Cars extends Model {
+
+    public $reg_no;
+    public $colour = null;
+    public $year = null;
 
     public static function factory($reg_no,$colour = null,$year = null) {
         $car = new Cars();
@@ -13,6 +18,8 @@ class Cars extends Model {
         if (!is_null($year)) {
             $car->year = $year;
         }
+
+        return $car;
     }
     public function setModel($modelName) {
         $condition = "name = :name:";
